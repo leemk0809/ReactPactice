@@ -21,7 +21,14 @@ function Content(props){
     while(i < dataLength){
       lists.push(
         <div className="list" key={data[i].id}>
-          <h3> { data[i].title }
+          <h3>
+            <a href={"/content/"+data[i].id}
+              data-id={data[i].id}
+              onClick={function(e){
+                e.preventDefault();
+                props.onChangePage(e.target.dataset.id);
+              }}>{ data[i].title }
+            </a> 
             <span onClick={ ()=>{ goodChange(good + 1) }}>👍</span> { good }
           </h3>
           <p>3月17日発行</p>
