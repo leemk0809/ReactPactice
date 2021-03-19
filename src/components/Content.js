@@ -1,10 +1,13 @@
 import { useState} from 'react';
 
-function Content(){
+function Content(props){
 
     //ES6 destructuring 文法
     let [title,titleChange] = useState(['男性のコートおすすめ！','女性のコートおすすめ！','新宿の美味しい店のおすすめ！']);
     let [good,goodChange] = useState(0);
+    var lists = [];
+    var data = props.data;
+    var dataLength = props.dataLength;
   
     function updateTitle(){
         //リエットの大原則＝＞immutable data(直接修正はダメ。)
@@ -13,42 +16,25 @@ function Content(){
         newTitle[0] = '女性のコートおすすめ！';
         titleChange(newTitle);
     }
-  
-    /*
-    class BoardInfo extends Component{
-      render(){
-        return(
-          <div className="list"> 
-            <h3> { title }
-              <span onClick={ ()=>{ goodChange(good + 1) }}>👍</span> { good }
-            </h3>
-            <p>2月17日発行</p>
-            <hr/>
-          </div>
-        )
-      }
-    }*/
-  
+
+    var i = 0;
+    while(i < dataLength){
+      lists.push(
+        <div className="list" key={data[i].id}>
+          <h3> { data[i].title }
+            <span onClick={ ()=>{ goodChange(good + 1) }}>👍</span> { good }
+          </h3>
+          <p>3月17日発行</p>
+          <hr/>
+        </div>
+      );
+      i = i + 1;
+    }
+
     return(
       <>
         <button onClick={updateTitle}>button</button>
-        <div className="list"> 
-          <h3> { title[0] }
-            <span onClick={ ()=>{ goodChange(good + 1) }}>👍</span> { good }
-          </h3>
-          <p>2月17日発行</p>
-          <hr/>
-        </div>
-        <div className="list">
-          <h3> { title[1] } </h3>
-          <p>2月18日発行</p>
-          <hr/>
-        </div>
-        <div className="list">
-          <h3> { title[2] } </h3>
-          <p>2月19日発行</p>
-          <hr/>
-        </div>
+        {lists}
       </>
     )
   }
