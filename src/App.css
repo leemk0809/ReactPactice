@@ -6,6 +6,10 @@ body {
   font-family: 'nanumsquare';
 }
 
+.control{
+  text-align: left;
+}
+
 .black-nav {
   background: black;
   width: 100%;

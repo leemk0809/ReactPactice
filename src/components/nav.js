@@ -1,4 +1,5 @@
 function Nav(props){
+    console.log("Nav render");
     return(
         <>
             <header className="black-nav">
