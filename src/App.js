@@ -3,7 +3,8 @@ import Nav from "./components/Nav";
 import Control from "./components/Control";
 import Content from "./components/Content";
 import DetailContent from "./components/DetailContent";
-import CreateContent from './components/CreateContent';
+import CreateContent from "./components/CreateContent";
+import UpdateContent from "./components/UpdateContent";
 import { useState } from 'react';
 
 function App() {
@@ -25,35 +26,58 @@ function App() {
   const [mode, modeInput] = useState('create')
   const [selected_content_id, scidInput] = useState(2);
 
-  var _title, _desc, _reg_dt, _article = null;
-  if(mode === 'welcome'){
-    _title = welcome.title;
-    _desc = welcome.desc;
-    _reg_dt = welcome.reg_dt.toLocaleTimeString();
-    _article = <DetailContent title={_title} desc={_desc} reg_dt={_reg_dt}/>
-  } else if(mode === 'read'){
+  function getReadContent(){
     var i = 0;
-    while(i < contents.length){
-      var data = contents[i];
-      if(data.id === selected_content_id){
-        _title = contents[i].title;
-        _desc = contents[i].desc;  
-        _reg_dt = contents[i].reg_dt.toLocaleTimeString();
-        break;
+      while(i < contents.length){
+        var data = contents[i];
+        if(data.id === selected_content_id){
+          return data;
+        }
+        i = i + 1;
       }
-      i = i + 1;
-    }
-    _article = <DetailContent title={_title} desc={_desc} reg_dt={_reg_dt}/>
-  } else if(mode === 'create'){
-    _article = <CreateContent onSubmit={function(_title, _desc){
-      max_content_id = max_content_id + 1 ;
-      const _reg_dt = new Date();
-      var _contents = {id:max_content_id, title:_title, desc:_desc, 
-        reg_dt:_reg_dt};
-      contentsInput(contents.concat(_contents));
-      console.log(_title, _desc);
-    }}/>
   }
+
+  function getContent(){
+    var _title, _desc, _reg_dt, _article = null;
+    var _content;
+    if(mode === 'welcome'){
+      _title = welcome.title;
+      _desc = welcome.desc;
+      _reg_dt = welcome.reg_dt.toLocaleTimeString();
+      _article = <DetailContent title={_title} desc={_desc} reg_dt={_reg_dt}/>
+    } else if(mode === 'read'){
+      _content = getReadContent();
+      _article = <DetailContent title={_content.title} desc={_content.desc} reg_dt={_content.reg_dt.toLocaleDateString()}/>
+    } else if(mode === 'create'){
+      _article = <CreateContent onSubmit={function(_title, _desc){
+        max_content_id = max_content_id + 1 ;
+        const _reg_dt = new Date();
+        var _contents = {id:max_content_id, title:_title, desc:_desc, 
+          reg_dt:_reg_dt};
+        contentsInput(contents.concat(_contents));
+        console.log(_title, _desc);
+      }}/>
+    } else if(mode === 'update'){
+      _content = getReadContent();
+      _article = <UpdateContent data={_content} onSubmit={function(_id, _title, _desc, _reg_dt){
+        var _contents = Array.from(contents);
+        var i = 0 ;
+        while(i < _contents.length){
+          if(_contents[i].id === _id){
+            _contents[i] = {id:_id, title:_title, desc:_desc, reg_dt:_reg_dt}
+            break;
+          }
+          i = i + 1;
+        }
+        contentsInput(_contents);
+        console.log(_title, _desc);
+      }}/>
+    }
+
+    return _article;
+  }
+
+  
 
   // function updateNav(){    
   //   var newNav = {title:nav.title,sub:nav.sub};
@@ -81,7 +105,7 @@ function App() {
       <Control onChangeMode={function(mode){
         modeInput(mode);
       }}></Control>      
-      {_article}
+      {getContent()}
     </div>
   );
 }
