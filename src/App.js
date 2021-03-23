@@ -21,9 +21,9 @@ function App() {
   //UIに影響がないValueなのでsteateを使いません。
   let max_content_id = 3;
   const [welcome, welcomeInput] = useState({
-    title : 'Welcome!', desc : 'Hello, welcome my Blog!', reg_dt : new Date()
+    title : 'ようこそ!', desc : 'こんにちは, ようこそ私のブログへ！'
   })
-  const [mode, modeInput] = useState('create')
+  const [mode, modeInput] = useState('welcome')
   const [selected_content_id, scidInput] = useState(2);
 
   function getReadContent(){
@@ -43,7 +43,6 @@ function App() {
     if(mode === 'welcome'){
       _title = welcome.title;
       _desc = welcome.desc;
-      _reg_dt = welcome.reg_dt.toLocaleTimeString();
       _article = <DetailContent title={_title} desc={_desc} reg_dt={_reg_dt}/>
     } else if(mode === 'read'){
       _content = getReadContent();
@@ -55,6 +54,8 @@ function App() {
         var _contents = {id:max_content_id, title:_title, desc:_desc, 
           reg_dt:_reg_dt};
         contentsInput(contents.concat(_contents));
+        scidInput(max_content_id);
+        modeInput('read');
         console.log(_title, _desc);
       }}/>
     } else if(mode === 'update'){
@@ -70,6 +71,7 @@ function App() {
           i = i + 1;
         }
         contentsInput(_contents);
+        modeInput('read');
         console.log(_title, _desc);
       }}/>
     }
@@ -98,14 +100,30 @@ function App() {
         }}>{nav.title}</a></h3>
         <h6>{nav.sub}</h6>
       </header> */}
+      {getContent()}
+      <Control onChangeMode={function(mode){
+        if(mode == 'delete'){
+          if(window.confirm('本当ですか？')){
+            var _contents = Array.from(contents);
+            var i = 0;
+            while(i < _contents.length){
+              if(_contents[i].id === selected_content_id){
+                _contents.splice(i, 1);
+                break;
+              }
+              i = i + 1;
+            }
+            contentsInput(_contents);
+            modeInput('mode');
+          }
+        } else {
+          modeInput(mode);
+        }
+      }}></Control>
       <Content data={contents} dataLength={contents.length} onChangePage={function(id){
         modeInput('read');
         scidInput(Number(id));
-      }}/>
-      <Control onChangeMode={function(mode){
-        modeInput(mode);
-      }}></Control>      
-      {getContent()}
+      }}/>      
     </div>
   );
 }

@@ -9,13 +9,13 @@ function Content(props){
   var data = props.data;
   var dataLength = props.dataLength;
 
-  function updateTitle(){
-      //リエットの大原則＝＞immutable data(直接修正はダメ。)
-      // deep Copyが要ります。[...title]
-      var newTitle = [...title];
-      newTitle[0] = '女性のコートおすすめ！';
-      titleChange(newTitle);
-  }
+  // function updateTitle(){
+  //     //リエットの大原則＝＞immutable data(直接修正はダメ。)
+  //     // deep Copyが要ります。[...title]
+  //     var newTitle = [...title];
+  //     newTitle[0] = '女性のコートおすすめ！';
+  //     titleChange(newTitle);
+  // }
 
   var i = 0;
   while(i < dataLength){
@@ -41,7 +41,7 @@ function Content(props){
 
   return(
     <>
-      <button onClick={updateTitle}>button</button>
+      {/* <button onClick={updateTitle}>button</button> */}
       {lists}
     </>
   )
